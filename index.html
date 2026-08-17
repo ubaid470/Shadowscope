@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ShadowScope — Instagram Analytics</title>
+<style>
+:root{--bg:#07070a;--panel:#101016;--panel2:#15151d;--text:#f5f5f7;--muted:#92929f;--line:#24242e;--accent:#c084fc;--accent2:#fb7185;--good:#4ade80}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% -10%,#32104f55,transparent 35%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif}
+button,input{font:inherit}.app{display:flex;min-height:100vh}.sidebar{width:250px;background:#09090d;border-right:1px solid var(--line);padding:22px 16px;position:fixed;inset:0 auto 0 0}.brand{font-weight:800;font-size:20px;margin:4px 10px 30px}.brand span{color:var(--accent)}
+.nav button{width:100%;border:0;background:none;color:var(--muted);padding:13px 12px;border-radius:10px;text-align:left;cursor:pointer;margin:3px 0}.nav button:hover,.nav .active{background:var(--panel2);color:white}.privacy{position:absolute;bottom:20px;left:16px;right:16px;background:#111116;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:12px;color:var(--muted)}.privacy b{display:block;color:#ddd;margin-bottom:4px}
+main{margin-left:250px;width:calc(100% - 250px);padding:28px;max-width:1500px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:24px}.title h1{margin:0;font-size:28px}.title p{margin:6px 0 0;color:var(--muted)}.search{display:flex;gap:8px}.search input{width:260px;background:var(--panel);border:1px solid var(--line);color:white;border-radius:10px;padding:11px 13px;outline:none}.btn{border:1px solid #353542;background:#181820;color:#fff;border-radius:10px;padding:11px 15px;cursor:pointer}.btn.primary{background:linear-gradient(135deg,#7c3aed,#db2777);border:0}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:linear-gradient(180deg,#121219,#0e0e14);border:1px solid var(--line);border-radius:15px;padding:18px}.metric{font-size:28px;font-weight:800;margin:8px 0}.label{font-size:12px;color:var(--muted)}.delta{font-size:12px;color:var(--good)}.profile{display:flex;gap:16px;align-items:center}.avatar{width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#9333ea,#f43f5e);display:grid;place-items:center;font-size:23px;font-weight:800}.profile h2{margin:0 0 4px}.profile p{margin:0;color:var(--muted)}.section{margin-top:18px}.section h3{font-size:16px;margin:0 0 12px}.two{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}.chart{height:230px;display:flex;align-items:end;gap:7px;padding-top:20px}.bar{flex:1;background:linear-gradient(180deg,#c084fc,#7c3aed);border-radius:6px 6px 2px 2px;min-height:12px;opacity:.9}.post{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding:13px 0}.post:first-child{border-top:0}.tag{font-size:11px;color:#d8b4fe;background:#3b1760;border-radius:999px;padding:5px 8px}.empty{color:var(--muted);text-align:center;padding:25px}.toast{position:fixed;right:20px;bottom:20px;background:#181820;border:1px solid #393946;padding:12px 15px;border-radius:10px;display:none}
+@media(max-width:900px){.sidebar{position:static;width:100%;height:auto;border-right:0;border-bottom:1px solid var(--line)}.app{display:block}.nav{display:flex;overflow:auto}.nav button{min-width:max-content}.privacy{display:none}main{margin:0;width:100%;padding:18px}.grid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.top{display:block}.search{margin-top:15px}.search input{width:100%}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.search{flex-direction:column}.search input{width:100%}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">Shadow<span>Scope</span> ◉</div>
+  <div class="nav">
+    <button class="active" onclick="showToast('Dashboard selected')">⌂ Dashboard</button>
+    <button onclick="showToast('Public profile explorer selected')">⌕ Explore</button>
+    <button onclick="showToast('Saved profiles selected')">☆ Saved</button>
+    <button onclick="showToast('Reports selected')">▣ Reports</button>
+    <button onclick="showToast('Settings selected')">⚙ Settings</button>
+  </div>
+  <div class="privacy"><b>Privacy-first mode</b>Public/authorized data only. No passwords, private posts, or privacy bypassing.</div>
+</aside>
+
+<main>
+  <div class="top">
+    <div class="title"><h1>Analytics Dashboard</h1><p>Monitor public or authorized Instagram data.</p></div>
+    <div class="search"><input id="handle" placeholder="@username" value="@demo.creator"><button class="btn primary" onclick="loadProfile()">Analyze</button></div>
+  </div>
+
+  <div class="card">
+    <div class="profile"><div class="avatar" id="avatar">DC</div><div><h2 id="name">Demo Creator</h2><p id="username">@demo.creator · Public profile</p></div><span class="tag">AUTHORIZED DATA</span></div>
+  </div>
+
+  <div class="grid section">
+    <div class="card"><div class="label">Followers</div><div class="metric" id="followers">24.8K</div><div class="delta">↑ 3.8% this month</div></div>
+    <div class="card"><div class="label">Following</div><div class="metric">486</div><div class="delta">Stable</div></div>
+    <div class="card"><div class="label">Engagement rate</div><div class="metric">6.4%</div><div class="delta">↑ 0.7%</div></div>
+    <div class="card"><div class="label">Public posts</div><div class="metric">318</div><div class="delta">+12 this month</div></div>
+  </div>
+
+  <div class="two section">
+    <div class="card"><h3>Follower growth</h3><div class="chart" id="chart"></div></div>
+    <div class="card"><h3>Public activity</h3>
+      <div class="post"><span>New public post detected</span><span class="tag">2h ago</span></div>
+      <div class="post"><span>Engagement snapshot updated</span><span class="tag">Yesterday</span></div>
+      <div class="post"><span>Profile metrics refreshed</span><span class="tag">3d ago</span></div>
+      <div class="post"><span>Monthly report generated</span><span class="tag">7d ago</span></div>
+    </div>
+  </div>
+
+  <div class="section card">
+    <h3>Recent public content</h3>
+    <div class="post"><span>Post #318 · 1,842 likes · 74 comments</span><span class="tag">Public</span></div>
+    <div class="post"><span>Post #317 · 2,106 likes · 91 comments</span><span class="tag">Public</span></div>
+    <div class="post"><span>Post #316 · 1,577 likes · 53 comments</span><span class="tag">Public</span></div>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+</div>
+<script>
+const vals=[45,52,49,61,68,64,73,78,84,81,91,100];
+const chart=document.getElementById('chart');
+vals.forEach(v=>{const b=document.createElement('div');b.className='bar';b.style.height=v+'%';chart.appendChild(b)});
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>t.style.display='none',1800)}
+function loadProfile(){
+ let h=document.getElementById('handle').value.trim();
+ if(!h){showToast('Enter a public/authorized username');return}
+ if(!h.startsWith('@'))h='@'+h;
+ document.getElementById('username').textContent=h+' · Public profile';
+ const clean=h.slice(1), initials=(clean.slice(0,2)||'DC').toUpperCase();
+ document.getElementById('avatar').textContent=initials;
+ document.getElementById('name').textContent=clean.replace(/[._-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+ showToast('Demo analytics loaded — connect your approved data source for live metrics.');
+}
+</script>
+</body>
+</html>
